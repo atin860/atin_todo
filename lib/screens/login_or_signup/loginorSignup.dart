@@ -1,6 +1,10 @@
+import 'package:atin_todo/screens/login_screen/login.dart';
+import 'package:atin_todo/screens/sign_up/signUp.dart';
+import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class LoginOrSignup extends StatefulWidget {
   const LoginOrSignup({super.key});
@@ -13,7 +17,10 @@ class _LoginOrSignupState extends State<LoginOrSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(title: 'Login or Signup'),
+      appBar: MyAppBar(
+        title: 'Login or Signup',
+        isBackButton: false,
+      ),
       body: ListView(
         children: [
           Container(
@@ -57,45 +64,18 @@ class _LoginOrSignupState extends State<LoginOrSignup> {
           SizedBox(
             height: 40,
           ),
-          Container(
-            padding: EdgeInsets.only(left: 30, right: 30),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Sign Up'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
+          AppButton(
+            text: 'SignUp',
+            onPressed: () {
+              Get.to(() => SignUp());
+            },
+            backgroundColor: Colors.green,
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 30, right: 30),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Login'),
-              style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 175, 162, 76),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ),
+          AppButton(
+              text: 'Login',
+              onPressed: () {
+                Get.to(() => LoginScreen());
+              }),
         ],
       ),
     );

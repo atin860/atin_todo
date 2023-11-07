@@ -1,6 +1,10 @@
+import 'package:atin_todo/controller/controller.dart';
+import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
+import 'package:atin_todo/widget/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -10,6 +14,8 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  MainController controller = Get.find();
+  TextEditingController email = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,38 +55,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           SizedBox(
             height: 30,
           ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: TextField(
-                decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              labelText: 'Email',
-              hintText: 'Enter your email',
-            )),
+          AppTextfield(
+            controller: email,
+            hintText: "Email",
+            labelText: 'Enter Your Email',
           ),
           SizedBox(
             height: 40,
           ),
-          Container(
-            margin: EdgeInsets.all(30),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Next'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ),
+          AppButton(
+              text: 'Send',
+              onPressed: () {
+                controller.forgetPassword(email.text);
+              }),
           SizedBox(
             height: 10,
           ),

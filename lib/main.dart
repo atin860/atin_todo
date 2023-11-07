@@ -1,8 +1,14 @@
-import 'package:atin_todo/screens/forget_password/forget_password.dart';
+import 'package:atin_todo/controller/binding.dart';
+import 'package:atin_todo/screens/splashscreen/splash.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'firebase_options.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -13,8 +19,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialBinding: AllBinding(),
       debugShowCheckedModeBanner: false,
-      home: ForgetPassword(),
+      home: SplashScreen(),
     );
   }
 }

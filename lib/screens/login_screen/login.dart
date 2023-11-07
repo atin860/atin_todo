@@ -1,5 +1,9 @@
+import 'package:atin_todo/controller/controller.dart';
+import 'package:atin_todo/screens/forget_password/forget_password.dart';
 import 'package:atin_todo/screens/sign_up/signUp.dart';
+import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
+import 'package:atin_todo/widget/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -12,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  MainController controller = Get.find();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,69 +58,47 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(
             height: 30,
           ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: TextField(
-                decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              labelText: 'Email',
-              hintText: 'Enter your email',
-            )),
+          AppTextfield(
+            controller: email,
+            hintText: "Enter Your Email",
+            labelText: "Email",
           ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: TextField(
-                decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              labelText: 'Password',
-              hintText: 'Enter your password',
-            )),
+          AppTextfield(
+            controller: password,
+            hintText: "Enter Your Password",
+            labelText: "Password",
           ),
           Row(
             children: [
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => ForgetPassword());
+                  },
                   child: Text(
                     "Forgot Password?",
                     style: TextStyle(color: Colors.deepOrange),
                   )),
             ],
           ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Next'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
+          AppButton(
+              text: 'Submit',
+              onPressed: () {
+                controller.login(email.text, password.text);
+              },
+              backgroundColor: Colors.green),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("Dont have an account?"),
             TextButton(
                 onPressed: () {
                   Get.to(() => SignUp());
                 },
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                      color: Colors.deepOrange, fontWeight: FontWeight.bold),
+                child: GestureDetector(
+                  onTap: () => Get.to(() => SignUp()),
+                  child: Text(
+                    "Sign Up",
+                    style: TextStyle(
+                        color: Colors.deepOrange, fontWeight: FontWeight.bold),
+                  ),
                 ))
           ]),
           SizedBox(

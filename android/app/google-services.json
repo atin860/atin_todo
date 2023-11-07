@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "143744529597",
+    "project_id": "todo-atin-app",
+    "storage_bucket": "todo-atin-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143744529597:android:08630bab725bc56deff3d4",
+        "android_client_info": {
+          "package_name": "com.atin_todo.vsafe.atin_todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQkS63gWsiR-Le4VvrsiRlIHnMp-xucb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

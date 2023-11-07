@@ -1,6 +1,11 @@
+import 'package:atin_todo/controller/controller.dart';
+import 'package:atin_todo/screens/login_screen/login.dart';
+import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
+import 'package:atin_todo/widget/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -10,6 +15,9 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  MainController controller = Get.find();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,38 +57,19 @@ class _SignUpState extends State<SignUp> {
           SizedBox(
             height: 30,
           ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: TextField(
-                decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              labelText: 'Name',
-              hintText: 'Enter your name',
-            )),
+          AppTextfield(
+            hintText: 'Enter your Name',
+            labelText: 'Name',
           ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: TextField(
-                decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              labelText: 'Email',
-              hintText: 'Enter your email',
-            )),
+          AppTextfield(
+            controller: email,
+            hintText: 'Enter your email',
+            labelText: 'Email',
           ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: TextField(
-                decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              labelText: 'Password',
-              hintText: 'Enter your password',
-            )),
+          AppTextfield(
+            controller: password,
+            hintText: 'Enter your password',
+            labelText: 'Password',
           ),
           Container(
             margin: EdgeInsets.all(10),
@@ -89,23 +78,12 @@ class _SignUpState extends State<SignUp> {
               style: TextStyle(color: Colors.grey),
             ),
           ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Next'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
+          AppButton(
+            text: 'SignUp',
+            onPressed: () {
+              controller.signup(email.text, password.text);
+            },
+            backgroundColor: Colors.green,
           ),
           SizedBox(
             height: 10,
@@ -113,11 +91,16 @@ class _SignUpState extends State<SignUp> {
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("already have an account?"),
             TextButton(
-                onPressed: () {},
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                      color: Colors.deepOrange, fontWeight: FontWeight.bold),
+                onPressed: () {
+                  Get.to(() => LoginScreen());
+                },
+                child: GestureDetector(
+                  onTap: () => Get.to(() => LoginScreen()),
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                        color: Colors.deepOrange, fontWeight: FontWeight.bold),
+                  ),
                 ))
           ]),
           SizedBox(

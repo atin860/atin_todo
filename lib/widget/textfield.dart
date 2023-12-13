@@ -21,10 +21,11 @@ class _AppTextfieldState extends State<AppTextfield> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15),
+      margin: EdgeInsets.all(10),
       child: TextField(
           controller: widget.controller,
           decoration: InputDecoration(
+            fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: widget.borderRadius ?? BorderRadius.circular(20),
             ),

@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../widget/toast.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -17,97 +19,121 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   MainController controller = Get.find();
   TextEditingController email = TextEditingController();
+  TextEditingController name = TextEditingController();
   TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(title: 'Sign Up'),
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 30, top: 20),
-            child: Text(
-              "Welcome To\nOur\nTodo App",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: MyAppBar(title: 'Sign Up'),
+        body: ListView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 30, top: 20),
+              child: Text(
+                "Welcome To\nOur\nTodo App",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30, top: 20),
-            child: Text(
-              "Our Todo App is a simple app that helps you to manage your daily tasks.",
-              style: TextStyle(color: Colors.grey),
+            Container(
+              padding: const EdgeInsets.only(left: 30, top: 20),
+              child: Text(
+                "Our Todo App is a simple app that helps you to manage your daily tasks.",
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            height: 100,
-            width: 100,
-            child: SvgPicture.asset(
-              'assets/images/img_logo_gray_50_01.svg',
-              width: 8,
-              // Specify the width
-              // height: 10,
+            SizedBox(
+              height: 20,
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          AppTextfield(
-            hintText: 'Enter your Name',
-            labelText: 'Name',
-          ),
-          AppTextfield(
-            controller: email,
-            hintText: 'Enter your email',
-            labelText: 'Email',
-          ),
-          AppTextfield(
-            controller: password,
-            hintText: 'Enter your password',
-            labelText: 'Password',
-          ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Text(
-              "Our Todo App is a simple app that helps you to manage your daily tasks.",
-              style: TextStyle(color: Colors.grey),
+            Container(
+              height: 100,
+              width: 100,
+              child: SvgPicture.asset(
+                'assets/images/img_logo_gray_50_01.svg',
+                width: 8,
+                // Specify the width
+                // height: 10,
+              ),
             ),
-          ),
-          AppButton(
-            text: 'SignUp',
-            onPressed: () {
-              controller.signup(email.text, password.text);
-            },
-            backgroundColor: Colors.green,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text("already have an account?"),
-            TextButton(
-                onPressed: () {
-                  Get.to(() => LoginScreen());
-                },
-                child: GestureDetector(
-                  onTap: () => Get.to(() => LoginScreen()),
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                        color: Colors.deepOrange, fontWeight: FontWeight.bold),
-                  ),
-                ))
-          ]),
-          SizedBox(
-            height: 10,
-          ),
-        ],
+            SizedBox(
+              height: 30,
+            ),
+            AppTextfield(
+              controller: name,
+              hintText: 'Enter your Name',
+              labelText: 'Name',
+            ),
+            AppTextfield(
+              controller: email,
+              hintText: 'Enter your email',
+              labelText: 'Email',
+            ),
+            AppTextfield(
+              controller: password,
+              hintText: 'Enter your password',
+              labelText: 'Password',
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: Text(
+                "Our Todo App is a simple app that helps you to manage your daily tasks.",
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            AppButton(
+              text: 'SignUp',
+              onPressed: () {
+                if (validate())
+                  controller.signup(email.text, password.text, name.text);
+              },
+              backgroundColor: Colors.green,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text("already have an account?"),
+              TextButton(
+                  onPressed: () {
+                    Get.to(() => LoginScreen());
+                  },
+                  child: GestureDetector(
+                    onTap: () => Get.to(() => LoginScreen()),
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ))
+            ]),
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  bool validate() {
+    if (name.text.isEmpty) {
+      showToastMessage('Please enter name.');
+      return false;
+    }
+    if (email.text.isEmpty) {
+      showToastMessage('Please enter email.');
+      return false;
+    }
+    if (password.text.isEmpty) {
+      showToastMessage('Please enter password.');
+      return false;
+    }
+    return true;
   }
 }

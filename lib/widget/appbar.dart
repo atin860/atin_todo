@@ -30,6 +30,7 @@ class _MyAppBarState extends State<MyAppBar> {
                 GestureDetector(
                   onTap: () => Get.back(),
                   child: Container(
+                    margin: EdgeInsets.only(left: 10),
                     height: 25,
                     width: 25,
                     padding: const EdgeInsets.all(5),

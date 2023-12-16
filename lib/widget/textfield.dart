@@ -7,9 +7,11 @@ class AppTextfield extends StatefulWidget {
     this.controller,
     this.hintText,
     this.borderRadius,
+    this.errorText,
   });
   final String? labelText;
   final String? hintText;
+  final String? errorText;
   final BorderRadius? borderRadius;
   final TextEditingController? controller;
 
@@ -25,13 +27,13 @@ class _AppTextfieldState extends State<AppTextfield> {
       child: TextField(
           controller: widget.controller,
           decoration: InputDecoration(
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: widget.borderRadius ?? BorderRadius.circular(20),
-            ),
-            labelText: widget.labelText,
-            hintText: widget.hintText,
-          )),
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: widget.borderRadius ?? BorderRadius.circular(20),
+              ),
+              labelText: widget.labelText,
+              hintText: widget.hintText,
+              errorText: widget.errorText)),
     );
   }
 }

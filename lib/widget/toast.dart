@@ -21,3 +21,11 @@ showToastMessage(String message) {
   //   icon: const Icon(Icons.add_alert),
   // );
 }
+
+successMessage(String message) {
+  Get.rawSnackbar(
+      message: message,
+      borderRadius: 10,
+      backgroundColor: Colors.green,
+      margin: EdgeInsets.all(10));
+}

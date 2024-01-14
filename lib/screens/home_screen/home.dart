@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:atin_todo/screens/personality_screen/personality_screen.dart';
 import 'package:atin_todo/screens/personality_screen/work_today_new.dart';
 import 'package:atin_todo/screens/setting_screen/settings.dart';
-import 'package:atin_todo/service/firebase_database.dart';
 import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../service/firebase_database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,11 +20,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController userNameController = TextEditingController();
+  final ImagePicker imgpicker = ImagePicker();
   File? pickedImage;
+  String? imageUrl;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: MyAppBar(
+        isBackButton: false,
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -41,20 +54,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     child: ClipOval(
-                      child: pickedImage != null
-                          ? Image.file(
-                              pickedImage!,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              'https://t3.ftcdn.net/jpg/05/56/29/10/360_F_556291020_q2ieMiOCKYbtoLITrnt7qcSL1LJYyWrU.jpg',
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
+                        child: imageUrl != null
+                            ? Image.network(
+                                imageUrl!,
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return const Text('😢');
+                                },
+                                frameBuilder: (_, image, loadingBuilder, __) {
+                                  if (loadingBuilder == null) {
+                                    return const SizedBox(
+                                      height: 150,
+                                      width: 150,
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    );
+                                  }
+                                  return image;
+                                },
+                              )
+                            : Image.asset(
+                                "assets/images/img_logo.png",
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              )),
                   ),
                 ],
               ),
@@ -71,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 10,
             ),
             Center(
-                child: Text("Vsafe Software",
+                child: Text(userNameController.text ?? "User",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
@@ -117,6 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (data.isNotEmpty) {
       setState(() {
         userNameController.text = data['userName'];
+
+        imageUrl = data['image'];
       });
     }
   }

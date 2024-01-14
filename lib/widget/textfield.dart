@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTextfield extends StatefulWidget {
   const AppTextfield({
@@ -8,11 +9,13 @@ class AppTextfield extends StatefulWidget {
     this.hintText,
     this.borderRadius,
     this.errorText,
+    this.keyboardType,
   });
   final String? labelText;
   final String? hintText;
   final String? errorText;
   final BorderRadius? borderRadius;
+  final TextInputType? keyboardType;
   final TextEditingController? controller;
 
   @override
@@ -25,6 +28,8 @@ class _AppTextfieldState extends State<AppTextfield> {
     return Container(
       margin: EdgeInsets.all(10),
       child: TextField(
+          inputFormatters: [UpperCaseTextFormatter()],
+          keyboardType: widget.keyboardType,
           controller: widget.controller,
           decoration: InputDecoration(
               fillColor: Colors.white,
@@ -35,5 +40,15 @@ class _AppTextfieldState extends State<AppTextfield> {
               hintText: widget.hintText,
               errorText: widget.errorText)),
     );
+  }
+}
+
+// UPPERCASE WORD CLASS
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+        text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }

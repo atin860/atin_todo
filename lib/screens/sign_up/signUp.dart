@@ -33,7 +33,7 @@ class _SignUpState extends State<SignUp> {
             Container(
               padding: const EdgeInsets.only(left: 30, top: 20),
               child: Text(
-                "Welcome To\nOur\nTodo App",
+                "Welcome To\nOur\nDAILY TASK",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class _SignUpState extends State<SignUp> {
             Container(
               padding: const EdgeInsets.only(left: 30, top: 20),
               child: Text(
-                "Our Todo App is a simple app that helps you to manage your daily tasks.",
+                "Our DAILY TASK is a simple app that helps you to manage your daily tasks.",
                 style: TextStyle(color: Colors.grey),
               ),
             ),
@@ -64,11 +64,6 @@ class _SignUpState extends State<SignUp> {
               height: 30,
             ),
             AppTextfield(
-              controller: name,
-              hintText: 'Enter your Name',
-              labelText: 'Name',
-            ),
-            AppTextfield(
               controller: email,
               hintText: 'Enter your email',
               labelText: 'Email',
@@ -77,13 +72,6 @@ class _SignUpState extends State<SignUp> {
               controller: password,
               hintText: 'Enter your password',
               labelText: 'Password',
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: Text(
-                "Our Todo App is a simple app that helps you to manage your daily tasks.",
-                style: TextStyle(color: Colors.grey),
-              ),
             ),
             AppButton(
               text: 'SignUp',
@@ -122,10 +110,6 @@ class _SignUpState extends State<SignUp> {
   }
 
   bool validate() {
-    if (name.text.isEmpty) {
-      showToastMessage('Please enter name.');
-      return false;
-    }
     if (email.text.isEmpty) {
       showToastMessage('Please enter email.');
       return false;

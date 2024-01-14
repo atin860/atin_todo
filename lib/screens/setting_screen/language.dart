@@ -1,4 +1,3 @@
-import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -17,36 +16,49 @@ class _LanguageScreenState extends State<LanguageScreen> {
         body: ListView(
           padding: EdgeInsets.only(top: 60, left: 10, right: 10),
           children: [
+            // Column(
+            //   children: [
+            //     Text("Settings",
+            //         style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: 30,
+            //         )),
+            //     SizedBox(
+            //       height: 10,
+            //     ),
+            //     Text("Your Settings so that we are comfortabl",
+            //         style: TextStyle(
+            //           fontSize: 10,
+            //           color: Colors.grey,
+            //         )),
+            //     SizedBox(
+            //       height: 50,
+            //     ),
+            //     HomeButtonWidget(
+            //         data: 'Hindi',
+            //         bgColor: Color.fromARGB(255, 255, 243, 208),
+            //         textColor: Colors.amber,
+            //         onTap: () {}),
+            //     HomeButtonWidget(
+            //         data: 'English',
+            //         bgColor: const Color.fromARGB(255, 218, 233, 245),
+            //         textColor: Colors.blue,
+            //         onTap: () {}),
+            //   ],
+            // ),
             Column(
               children: [
-                Text("Settings",
+                Center(
+                  child: Text(
+                    "We WOrk on new update",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    )),
-                SizedBox(
-                  height: 10,
+                        fontSize: 20,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-                Text("Your Settings so that we are comfortabl",
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    )),
-                SizedBox(
-                  height: 50,
-                ),
-                HomeButtonWidget(
-                    data: 'Hindi',
-                    bgColor: Color.fromARGB(255, 255, 243, 208),
-                    textColor: Colors.amber,
-                    onTap: () {}),
-                HomeButtonWidget(
-                    data: 'English',
-                    bgColor: const Color.fromARGB(255, 218, 233, 245),
-                    textColor: Colors.blue,
-                    onTap: () {}),
               ],
-            ),
+            )
           ],
         ));
   }

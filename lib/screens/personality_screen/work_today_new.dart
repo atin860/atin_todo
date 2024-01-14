@@ -33,152 +33,110 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(),
-        body: Container(
-          child: Column(
-            children: [
-              AppTextfield(
-                controller: taskNameController,
-                labelText: 'Add Task',
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(_dueDate == null
-                          ? 'No Due Date'
-                          : 'Due Date: ${DateFormat('MMM d, y').format(_dueDate!)}'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2100),
-                        );
-
-                        if (pickedDate != null) {
-                          setState(() {
-                            _dueDate = pickedDate;
-                          });
-                        }
-                      },
-                      child: Text('Pick Date'),
-                    ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    addTask();
-                  },
-                  child: Text("Add Task")),
-              SizedBox(
-                height: 30,
-              ),
-              // processing
-              //     ? CircularProgressIndicator()
-              //     : Expanded(
-              //         child: ListView.builder(
-              //             itemCount: allTaskList.length,
-              //             itemBuilder: ((context, index) {
-              //               return Container(
-              //                 decoration: BoxDecoration(
-              //                     borderRadius: BorderRadius.circular(10),
-              //                     color: Color.fromARGB(255, 207, 225, 10)),
-              //                 margin:
-              //                     EdgeInsets.only(left: 10, right: 10, top: 5),
-              //                 child: ListTile(
-              //                   title: Text(allTaskList[index]['taskName']),
-              //                   subtitle: Text(
-              //                     '${DateFormat('MMM d, y').format(DateTime.parse(allTaskList[index]['dueDate']))} ',
-              //                   ),
-              //                 ),
-              //               );
-              //             })))
-
-              //main..........................................
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('tasks')
-                        .where("userId", isEqualTo: auth.currentUser?.uid)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Something went wrong');
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading");
-                      }
-                      if (snapshot.data!.docs.isEmpty) {
-                        return Text("Task is empty");
-                      }
-                      return ListView(
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot document) {
-                          Map<String, dynamic> data =
-                              document.data()! as Map<String, dynamic>;
-                          return Card(
-                            color: Colors.amber,
-                            //  mainAxisAlignment: MainAxisAlignment.center,
-                            child: ListTile(
-                              // onTap: () {
-                              //   FireStoreService.deleteTask(document.id);
-                              // },
-                              title: Text(
-                                data['taskName'],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              subtitle: Text(
-                                data['duedate'] ?? 'dueDate',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                              trailing: Wrap(
-                                spacing: 12,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        updateTaskForm();
-                                      },
-                                      icon: Icon(Icons.edit)),
-                                  IconButton(
-                                      onPressed: () {
-                                        FireStoreService.deleteTask(
-                                            document.id);
-                                        showToastMessage("Delete item");
-                                      },
-                                      icon: Icon(Icons.delete)),
-                                ],
-                              ),
-                            ),
-                          );
-                        }).toList(),
+        appBar: const MyAppBar(),
+        body: Column(
+          children: [
+            AppTextfield(
+              controller: taskNameController,
+              labelText: 'Add Task',
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(_dueDate == null
+                        ? 'No Due Date'
+                        : 'Due Date: ${DateFormat('MMM d, y').format(_dueDate!)}'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
                       );
-                      // return Container(
-                      //   decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(10),
-                      //       color: Color.fromARGB(255, 207, 225, 10)),
-                      //   margin: EdgeInsets.only(left: 10, right: 10, top: 5),
-                      //   child: ListTile(
-                      //     title: Text(),
-                      //     subtitle: Text(
-                      //       '${DateFormat('MMM d, y').format(DateTime.parse(allTaskList[index]['dueDate']))} ',
-                      //     ),
-                      //   ),
-                      // );
-                    }),
-              )
-            ],
-          ),
+
+                      if (pickedDate != null) {
+                        setState(() {
+                          _dueDate = pickedDate;
+                        });
+                      }
+                    },
+                    child: const Text('Pick Date'),
+                  ),
+                ],
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  addTask();
+                },
+                child: const Text("Add Task")),
+            const SizedBox(
+              height: 30,
+            ),
+
+            //main..........................................
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('tasks')
+                      .where("userId", isEqualTo: auth.currentUser?.uid)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('Something went wrong');
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text("Loading");
+                    }
+                    if (snapshot.data!.docs.isEmpty) {
+                      return const Text("Task is empty");
+                    }
+                    return ListView(
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
+                        return Card(
+                          color: const Color.fromARGB(255, 231, 255, 95),
+                          child: ListTile(
+                            title: Text(
+                              data['taskName'],
+                              style: const TextStyle(),
+                            ),
+                            subtitle: Text(
+                              data['dueDate'] ?? "_dueDate",
+                              style: const TextStyle(),
+                            ),
+                            trailing: Wrap(
+                              spacing: 12,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      updateTaskForm(document.id, data);
+                                    },
+                                    icon: const Icon(Icons.edit)),
+                                IconButton(
+                                    onPressed: () {
+                                      FireStoreService.deleteTask(document.id);
+
+                                      showToastMessage("Delete item");
+                                    },
+                                    icon: const Icon(Icons.delete)),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
+            )
+          ],
         ));
   }
 
@@ -204,7 +162,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     });
   }
 
-  void updateTaskForm() {
+  void updateTaskForm(id, data) {
+    TextEditingController controller =
+        TextEditingController(text: data['taskName']);
+    _dueDate = DateTime.parse(data['dueDate']);
     Get.bottomSheet(
       SingleChildScrollView(
         child: ClipRRect(
@@ -229,14 +190,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     height: 20,
                   ),
                   AppTextfield(
-                    controller: taskNameController,
+                    controller: controller,
                     hintText: "New Task",
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 20, right: 20),
+                    padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Row(
                       children: [
                         Expanded(
@@ -259,19 +220,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               });
                             }
                           },
-                          child: Text('Pick Date'),
+                          child: const Text('Pick Date'),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                   ElevatedButton(
                       onPressed: () async {
-                        //  updateTask();
+                        Navigator.of(context).pop();
+
+                        Map<String, dynamic> data = {
+                          "taskName": controller.text,
+                          "dueDate": _dueDate.toString()
+                        };
+                        FireStoreService.editTask(id, data);
                       },
-                      child: Text("Update Task")),
+                      child: const Text("Update Task")),
                 ],
               ),
             ),

@@ -32,7 +32,6 @@ class MainController extends GetxController {
       dismissLoadingWidget();
     } on FirebaseAuthException catch (e) {
       dismissLoadingWidget();
-
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
         showToastMessage('No user found for that email.');
@@ -44,12 +43,16 @@ class MainController extends GetxController {
         showToastMessage('Wrong email or password.');
       } else {
         log("FirebaseAuthException: $e");
-        showToastMessage(e.message!);
+        print(
+          e.message!,
+        );
+        showToastMessage("Wrong Password provided");
       }
     } catch (e) {
       dismissLoadingWidget();
       log("catch error: $e");
       showToastMessage(e.toString());
+      successMessage("Login Successfull");
     }
   }
 
@@ -62,9 +65,9 @@ class MainController extends GetxController {
         password: password,
       );
       dismissLoadingWidget();
-      showToastMessage('Account created successfully');
+      successMessage('Account created successfully');
       credential.user!.updateDisplayName(name); // TO SET THE NAME OF THE USER
-      // auth.currentUser!.displayName??"";   TO GET THE NAME OF THE USER
+      auth.currentUser!.displayName ?? ""; // TO GET THE NAME OF THE USER
     } on FirebaseAuthException catch (e) {
       dismissLoadingWidget();
       if (e.code == 'weak-password') {
@@ -87,7 +90,10 @@ class MainController extends GetxController {
 
 // Logout button controller
   void logout() async {
+    showLoading();
     await auth.signOut();
+    dismissLoadingWidget();
+    successMessage("logout User");
   }
 
 // Forget button controller
@@ -98,7 +104,7 @@ class MainController extends GetxController {
           .sendPasswordResetEmail(email: email)
           .then((value) => log('Send otp to $email'));
       dismissLoadingWidget();
-      showToastMessage('Reset password link sent to $email');
+      successMessage('Reset password link sent to $email');
     } catch (e) {
       dismissLoadingWidget();
       print(e);

@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:atin_todo/controller/controller.dart';
 import 'package:atin_todo/service/firebase_database.dart';
+import 'package:atin_todo/service/firebase_storage.dart';
 import 'package:atin_todo/widget/app_button.dart';
 import 'package:atin_todo/widget/appbar.dart';
 import 'package:atin_todo/widget/textfield.dart';
 import 'package:atin_todo/widget/toast.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,14 +21,21 @@ class PerosnalityScreen extends StatefulWidget {
 
 class _PerosnalityScreenState extends State<PerosnalityScreen> {
   TextEditingController userNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+
   TextEditingController hobbyController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController cityController = TextEditingController();
   final ImagePicker imgpicker = ImagePicker();
+  String? imageUrl;
   File? pickedImage;
 
-  @override
+  Future uplodeFile() async {
+    final Path = 'profile/my-image.jpg';
+    final file = File(pickedImage!.path);
+    final ref = FirebaseStorage.instance.ref().child(Path);
+    ref.putFile(file);
+  }
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -38,11 +47,11 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-          appBar: MyAppBar(
+          appBar: const MyAppBar(
             title: 'Personality',
           ),
           body: ListView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            //  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
               Align(
                 alignment: Alignment.center,
@@ -56,20 +65,39 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
                         ),
                       ),
                       child: ClipOval(
-                        child: pickedImage != null
-                            ? Image.file(
-                                pickedImage!,
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                'https://t3.ftcdn.net/jpg/05/56/29/10/360_F_556291020_q2ieMiOCKYbtoLITrnt7qcSL1LJYyWrU.jpg',
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
+                          child: pickedImage != null
+                              ? Image.file(
+                                  pickedImage!,
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                )
+                              : imageUrl != null
+                                  ? Image.network(
+                                      imageUrl!,
+                                      width: 150,
+                                      height: 150,
+                                      fit: BoxFit.cover,
+                                      frameBuilder:
+                                          (_, image, loadingBuilder, __) {
+                                        if (loadingBuilder == null) {
+                                          return const SizedBox(
+                                            height: 150,
+                                            width: 150,
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          );
+                                        }
+                                        return image;
+                                      },
+                                    )
+                                  : Image.asset(
+                                      "assets/images/img_logo.png",
+                                      width: 150,
+                                      height: 150,
+                                      fit: BoxFit.cover,
+                                    )),
                     ),
                     Positioned(
                       bottom: 0,
@@ -88,7 +116,7 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               AppTextfield(
@@ -97,17 +125,13 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
                 labelText: 'User Name',
               ),
               AppTextfield(
-                controller: emailController,
-                hintText: 'Enter Your Email',
-                labelText: 'Email',
-              ),
-              AppTextfield(
                 controller: hobbyController,
                 hintText: 'Enter Your HObbies',
                 labelText: 'Hobbies',
               ),
               AppTextfield(
                 controller: ageController,
+                keyboardType: TextInputType.number,
                 hintText: 'Enter Your Age',
                 labelText: 'Age',
               ),
@@ -117,10 +141,10 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
                 labelText: 'City',
               ),
               AppButton(
-                  text: 'Change save',
+                  text: ' Save',
                   onPressed: () async {
                     addUser();
-                  })
+                  }),
             ],
           ),
         ));
@@ -133,6 +157,12 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
       final tempImage = File(photo.path);
       setState(() {
         pickedImage = tempImage;
+      });
+      StorageService.uploadFile("profilePic", "fileName.jpg", file: pickedImage)
+          .then((value) {
+        FireStoreService.updateUser({"image": value});
+
+        print("file uploaded \n $value");
       });
 
       Get.back();
@@ -147,10 +177,10 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
     if (data.isNotEmpty) {
       setState(() {
         userNameController.text = data['userName'];
-        emailController.text = data['Email'];
         hobbyController.text = data['hobbies'];
         cityController.text = data['city'];
-        ageController.text = data[int.parse('age')];
+        ageController.text = data['age'].toString();
+        imageUrl = data['image'];
       });
     }
   }
@@ -163,7 +193,7 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
       "hobbies": hobbyController.text,
       "age": int.parse(ageController.text.trim()),
       "city": cityController.text,
-      "userId": auth.currentUser!.uid
+      "userId": auth.currentUser!.uid,
     };
     log("befor adding user:");
 
@@ -176,7 +206,6 @@ class _PerosnalityScreenState extends State<PerosnalityScreen> {
     successMessage("Successfully Updated,");
     setState(() {
       userNameController.clear();
-      emailController.clear();
       hobbyController.clear();
       ageController.clear();
       cityController.clear();

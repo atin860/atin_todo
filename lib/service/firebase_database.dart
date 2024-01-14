@@ -7,7 +7,7 @@ class FireStoreService {
   static CollectionReference tasks = instance.collection('tasks');
   static CollectionReference users = instance.collection('users');
 
-// task function ...1..................................................
+// task function .....1..................................................
   static Future<Map?> addTask(Map<String, dynamic> data) async {
     try {
       return tasks.add(data).then((value) => data);
@@ -40,7 +40,16 @@ class FireStoreService {
   static deleteTask(id) {
     try {
       return tasks.doc(id).delete();
-      // return tasks.doc(id).update(data);
+    } catch (e) {
+      showToastMessage("error:$e");
+      print("add task error : $e");
+    }
+  }
+
+// task function .....4........................................................
+  static editTask(id, Map<String, dynamic> data) {
+    try {
+      return tasks.doc(id).update(data);
     } catch (e) {
       showToastMessage("error:$e");
       print("add task error : $e");
@@ -50,6 +59,20 @@ class FireStoreService {
   static Future<Map?> addUser(Map<String, dynamic> data) async {
     try {
       return users.doc(auth.currentUser?.uid).set(data).then((value) => data);
+    } catch (e) {
+      showToastMessage("error:$e");
+      print("add user error : $e");
+
+      return null;
+    }
+  }
+
+  static Future<Map?> updateUser(Map<String, dynamic> data) async {
+    try {
+      return users
+          .doc(auth.currentUser?.uid)
+          .update(data)
+          .then((value) => data);
     } catch (e) {
       showToastMessage("error:$e");
       print("add user error : $e");
